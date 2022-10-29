@@ -1,0 +1,4 @@
+.ping-server:hover{
+  filter: opacity(60%);
+  cursor: pointer;
+}
