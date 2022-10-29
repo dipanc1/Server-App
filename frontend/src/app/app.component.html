@@ -1,21 +1,33 @@
 <!-- <div>{{ appState$ | async | json }}</div> -->
 <div class="container-xl" style="margin-top: 30px;">
-  <ng-container *ngIf="(appState$ | async) as appState" [ngSwitch]="appState.dataState">
 
-    <div class="container text-center" style="padding: 50px; background-color: aquamarine;">
-      <div class=" row">
-        <div class="col-4">
-          <h1>Manage Servers</h1>
+  <div class="container text-center" style="padding: 50px; background-color: aquamarine;">
+    <div class=" row">
+      <div class="col-4">
+        <h1>Manage Servers</h1>
+      </div>
+      <div class="col-2">
+      </div>
+      <div class="col-6" style="display: flex; justify-content: space-between;">
+
+        <div class="form-floating">
+          <select id="floatingSelect" (ngModelChange)="filterServers($event)" ngModel="ALL" class="form-select">
+            <option value="ALL">ALL</option>
+            <option value="SERVER_UP">SERVER UP</option>
+            <option value="SERVER_DOWN">SERVER Down</option>
+          </select>
+          <label for="floatingSelect">Select Servers</label>
         </div>
-        <div class="col-2">
-        </div>
-        <div class="col-6" style="display: flex; justify-content: space-between;">
-          <button type="button" class="btn btn-primary">Primary</button>
-          <button type="button" class="btn btn-secondary">Secondary</button>
-          <button type="button" class="btn btn-success">Success</button>
-        </div>
+
+        <button type="button" class="btn btn-secondary">Secondary</button>
+
+        <button type="button" class="btn btn-success">Success</button>
+
       </div>
     </div>
+  </div>
+
+  <ng-container *ngIf="(appState$ | async) as appState" [ngSwitch]="appState.dataState">
 
     <ng-container *ngSwitchCase="DataState.LOADING_STATE">
       <div class="card" aria-hidden="true">
@@ -69,19 +81,42 @@
               </span>
             </td>
             <td>
-              <img *ngIf="(filterStatus$ | async) === '' || (filterStatus$ |  async) !== server.ipAddress" width="30px" class="ping-server"
-                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSYvCoXeNvNXq4zfsx7S2BuymA1YLGSOq-yROATS4wtgg&s"
-                alt="ping">
+              <a (click)="pingServer(server.ipAddress)">
+                <img *ngIf="(filterStatus$ | async) === '' || (filterStatus$ |  async) !== server.ipAddress"
+                  width="30px" class="ping-server"
+                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSYvCoXeNvNXq4zfsx7S2BuymA1YLGSOq-yROATS4wtgg&s"
+                  alt="ping">
+              </a>
               <p *ngIf="(filterStatus$ |  async) === server.ipAddress" class="card-text placeholder-glow">
                 <a href="#" tabindex="-1" class="btn btn-danger disabled placeholder col-6"></a>
               </p>
             </td>
-            <td><img style="cursor: pointer;" width="30px" src="https://cdn-icons-png.flaticon.com/512/1345/1345874.png" alt="delete"></td>
+            <td><img style="cursor: pointer;" width="30px" src="https://cdn-icons-png.flaticon.com/512/1345/1345874.png"
+                alt="delete"></td>
           </tr>
         </tbody>
 
       </table>
     </ng-container>
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            ...
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary">Save changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
 
   </ng-container>
 </div>

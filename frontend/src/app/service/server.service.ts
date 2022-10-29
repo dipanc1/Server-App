@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
-import { CustomResponse } from '../interface/custom-reponse';
+import { CustomResponse } from '../interface/custom-response';
 import { Server } from '../interface/server';
 import { Status } from '../enum/status.enum';
 
