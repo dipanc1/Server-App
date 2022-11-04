@@ -19,9 +19,19 @@
           <label for="floatingSelect">Select Servers</label>
         </div>
 
-        <button type="button" class="btn btn-secondary">Secondary</button>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+          <!--Add icon link -->
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle"
+            viewBox="0 0 16 16">
+            <path
+              d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm0-1A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm1-8a.5.5 0 0 0-.5-.5H8V6a.5.5 0 0 0-1 0v.5H6a.5.5 0 0 0 0 1h.5V9a.5.5 0 0 0 1 0V8.5H9a.5.5 0 0 0 .5-.5z" />
+          </svg>
+          Add Server
+        </button>
 
-        <button type="button" class="btn btn-success">Success</button>
+        <button (click)="printReport()" type="button" class="btn btn-dark">Print Report</button>
+
+        <button (click)="saveAsPdf()" type="button" class="btn btn-light">Save as PDF</button>
 
       </div>
     </div>
@@ -50,7 +60,7 @@
     </ng-container>
 
     <ng-container *ngSwitchCase="DataState.LOADED_STATE">
-      <table class="table">
+      <table class="table" id="servers">
 
         <thead>
           <tr>
@@ -91,8 +101,10 @@
                 <a href="#" tabindex="-1" class="btn btn-danger disabled placeholder col-6"></a>
               </p>
             </td>
-            <td><img style="cursor: pointer;" width="30px" src="https://cdn-icons-png.flaticon.com/512/1345/1345874.png"
-                alt="delete"></td>
+            <td>
+              <img (click)="deleteServer(server)" style="cursor: pointer;" width="30px" src="https://cdn-icons-png.flaticon.com/512/1345/1345874.png"
+                alt="delete">
+            </td>
           </tr>
         </tbody>
 
@@ -103,20 +115,53 @@
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
-          <div class="modal-header">
-            <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            ...
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Save changes</button>
-          </div>
+          <form #serverForm="ngForm" (ngSubmit)="saveServer(serverForm)">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="exampleModalLabel">Add Server</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <div class="mb-3">
+                <label class="form-label">IP</label>
+                <input type="text" ngModel class="form-control" name="ipAddress" required>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Name</label>
+                <input type="text" ngModel class="form-control" name="name" required>
+              </div>
+              <div class="row">
+                <div class="col">
+                  <label class="form-label">Memory</label>
+                  <input type="text" ngModel class="form-control" name="memory" required>
+                </div>
+                <div class="col">
+                  <label class="form-label">Type</label>
+                  <input type="text" ngModel class="form-control" name="type" required>
+                </div>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Status</label>
+                <select class="form-control" name="status" required ngModel="SERVER_DOWN">
+                  <option value="SERVER_UP">SERVER UP</option>
+                  <option value="SERVER_DOWN">SERVER DOWN</option>
+                </select>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button id="closeModal" type="button" class="btn btn-warning" data-bs-dismiss="modal">Cancel</button>
+              <button [disabled]="serverForm.invalid || (isLoading$ | async)" type="submit" class="btn btn-success">
+                <p *ngIf="isLoading$ | async" class="card-text placeholder-glow">
+                  <span class="placeholder">Saving...</span>
+                </p>
+                <span *ngIf="!(isLoading$ | async)">Add</span>
+              </button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
 
   </ng-container>
 </div>
+
+<notifier-container></notifier-container>
